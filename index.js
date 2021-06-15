@@ -11,14 +11,14 @@ class Timer {
     }
 
     start() {
-        const deadline = Date.parse('Jun 29, 2021');
+        const deadline = new Date('Jun 29, 2021').getTime();
 
         setInterval(() => {
-            const currentTime = Date.parse(new Date());
+            const currentTime = Date.now();
             const deltaTime = deadline - currentTime;
             const { days, hours, mins, secs } = this.getTime(deltaTime);
             setClock({ days, hours, mins, secs });
-        }, 1000);
+        }, 100);
     }
 
     getTime(time) {
