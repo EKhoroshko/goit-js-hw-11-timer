@@ -1,27 +1,28 @@
 const $day = document.querySelector('[data-value="days"]'),
     $hour = document.querySelector('[data-value="hours"]'),
     $min = document.querySelector('[data-value="mins"]'),
-    $sec = document.querySelector('[data-value="secs"]');
+    $sec = document.querySelector('[data-value="secs"]'),
+    $timer = document.querySelector('.timer');
 
 class Timer {
-    constructor(onTick, selector, deadline) {
+    constructor({ onTick, selector, deadline }) {
         this.onTick = onTick;
         this.selector = selector;
         this.deadline = deadline;
     }
 
     start() {
-        const deadline = new Date('Jun 29, 2021').getTime();
-
-        setInterval(() => {
+        
+        this.timers = setInterval(() => {
             const currentTime = Date.now();
-            const deltaTime = deadline - currentTime;
-            const { days, hours, mins, secs } = this.getTime(deltaTime);
+            const deltaTime = this.deadline - currentTime;
+            const { days, hours, mins, secs } = this.getTimes(deltaTime);
             setClock({ days, hours, mins, secs });
+            this.stopTimer(deltaTime);
         }, 100);
     }
 
-    getTime(time) {
+    getTimes(time) {
         const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24))),
             hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))),
             mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60))),
@@ -33,10 +34,17 @@ class Timer {
     pad(value) {
         return String(value).padStart(2, '0');
     }
+
+    stopTimer(time) {
+        if (time <= 0) {
+            clearInterval(this.timers);
+            $timer.textContent = 'Did you meet the deadline?';
+        }
+    }
 }
 
 const timer = new Timer({
-    onTick: setClock, selector: '#timer-1', deadline: new Date('Jun 29, 2021')
+    onTick: setClock, selector: '#timer-1', deadline: new Date('Jun 23, 2021 13:28'),
 });
 timer.start();
 
